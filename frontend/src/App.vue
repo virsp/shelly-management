@@ -1,10 +1,20 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <b-navbar toggleable="lg" type="dark" variant="dark">
+       <b-navbar-brand href="#">Shelly management</b-navbar-brand>
+       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+       <b-collapse id="nav-collapse" is-nav>
+         <b-navbar-nav>
+           <b-nav-item><router-link tag="li" to="/home">Home</router-link></b-nav-item>
+           <b-nav-item><router-link tag="li" to="/about">About</router-link></b-nav-item>
+           <b-nav-item><router-link tag="li" to="/dashboard">Dashboard</router-link></b-nav-item>
+         </b-navbar-nav>
+       </b-collapse>
+    </b-navbar>
+    <div class="container">
+      <router-view/>
+
     </div>
-    <router-view/>
   </div>
 </template>
 
@@ -29,4 +39,12 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+nav li:hover,
+nav li.router-link-active,
+nav li.router-link-exact-active {
+   /* background-color: rgb(52, 159, 201); */
+   font-weight: bolder;
+   
+   cursor: pointer;
+ }
 </style>
