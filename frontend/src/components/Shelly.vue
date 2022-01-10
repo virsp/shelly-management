@@ -5,28 +5,35 @@
                 <b-card-text>
                     <div class="mb-0 ">
                         <div class="text-left">
-                            <b-icon id="clickable" @click="test()" icon="chevron-double-down"></b-icon> Wifi AP - <b v-bind:class="{'text-success': settings.wifi_ap.enabled, 'text-danger': !settings.wifi_ap.enabled}">{{settings.wifi_ap.enabled}}</b>
+                            <b-icon id="clickable" ref="click" @click="showMore(0)" icon="chevron-double-down"></b-icon> Wifi AP - <b v-bind:class="{'text-success': settings.wifi_ap.enabled, 'text-danger': !settings.wifi_ap.enabled}">{{settings.wifi_ap.enabled}}</b>
                     
                         </div>
-                        <div class="row pl-4" v-for="(value, name) in removeEnable(settings.wifi_ap)" v-bind:key="value">
-                            <div class="text-capitalize">{{name}}</div>: {{value}}
+                        <!-- <b-button @click="checkVerbose()"></b-button> -->
+                        <div v-if="this.toggle[0]">
+                            <div class="row pl-4" v-for="(value, name) in removeEnable(settings.wifi_ap)" v-bind:key="value">
+                                <div class="text-capitalize">{{name}}</div>: {{value}}
+                            </div>
+
                         </div>
                     </div>
 
                     <div class="mb-0">
                         <div class="text-left">
-                            Wifi STA - <b v-bind:class="{'text-success': settings.wifi_sta.enabled, 'text-danger': !settings.wifi_sta.enabled}">{{settings.wifi_sta.enabled}}</b>
+                            <b-icon id="clickable" ref="click" @click="showMore(1)" icon="chevron-double-down"></b-icon> Wifi STA - <b v-bind:class="{'text-success': settings.wifi_sta.enabled, 'text-danger': !settings.wifi_sta.enabled}">{{settings.wifi_sta.enabled}}</b>
                         </div>
-                        <div class="row pl-4" v-for="(value, name) in removeEnable(settings.wifi_sta)" v-bind:key="name">
-                            <div class="text-capitalize">{{name}}</div>: {{value}}
+
+                        <div v-if="this.toggle[1]">
+                            <div class="row pl-4" v-for="(value, name) in removeEnable(settings.wifi_sta)" v-bind:key="name">
+                                <div class="text-capitalize">{{name}}</div>: {{value}}
+                            </div>
                         </div>
                     </div>
                     
                     <div class="mb-0">
                         <div class="text-left">
-                            MQTT - <b v-bind:class="{'text-success': settings.mqtt.enable, 'text-danger': !settings.mqtt.enable}">{{settings.mqtt.enable}}</b>
+                            <b-icon id="clickable" ref="click" @click="showMore(1)" icon="chevron-double-down"></b-icon> MQTT - <b v-bind:class="{'text-success': settings.mqtt.enable, 'text-danger': !settings.mqtt.enable}">{{settings.mqtt.enable}}</b>
                         </div>
-                        <div v-if="true">
+                        <div v-if="this.toggle[2]">
                             <div class="row pl-4" v-for="(value, name) in removeEnable(settings.mqtt)" v-bind:key="name">
                                 <div class="text-capitalize">{{name}}</div>: {{value}}
                             </div>
@@ -53,13 +60,45 @@ export default {
             const justStrings = Object.fromEntries(filtered);
             return justStrings
         },
-        test(eeee){
-            console.log(this.$refs.input);
+        showMore(i){
+            if(this.toggle[i]) this.$set(this.toggle, i, false); 
+            else this.$set(this.toggle, i, true);
+        },
+        test(){
+            console.log(this.$el);
+            console.log(this.$refs);
+            let verboseNode = this.$refs.click.nextSibling.nodeValue;
+            console.log(this.verbose.includes(verboseNode));
+            if(this.verbose.includes(verboseNode)){
+                this.verbose = this.verbose.filter(key => key !== verboseNode);
+                // console.log(this.verbose);
+            }else {
+                console.log('clicked ' + verboseNode);
+                this.verbose.push(verboseNode)
+            }
+            console.log(this.verbose);
+            
+        },
+        checkVerbose(){
+            if(this.$refs.click){
+                console.log("check verbose");
+                let verboseNode = this.$refs.click.nextSibling.nodeValue;
+                console.log(verboseNode);
+                let exist = this.verbose.includes();
+                console.log("is clicked " + exist);
+                return exist;
+
+            }else {
+                return false;
+            }
+
         }
     },
     data() {
         return {
-            verbose: false,
+            verbose: [],
+            temp: false,
+            toggle:[false, false, false, false],
             settings: {
 	"device": {
 		"type": "SHPLG-S",
