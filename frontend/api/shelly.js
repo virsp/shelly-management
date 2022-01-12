@@ -30,6 +30,21 @@ let shelly = {
         .catch(err => console.error('error:' + err));
     
         return data;
+    },
+    getOTA: async (ip) => {
+        let url = 'http://' + ip + '/ota';
+        let options = {method: 'GET'};
+        let data;
+        await fetch(url, options)
+        .then(res => res.json())
+        .then(json => {
+            console.log(json)
+            data = json
+        })
+        .catch(err => console.error('error:' + err));
+    
+        return data;
+
     }
 }
 
