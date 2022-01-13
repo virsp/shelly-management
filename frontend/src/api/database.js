@@ -3,8 +3,7 @@ import logger from '@/plugins/logger';
 
 let db = {
     getIPS: async () => {
-        let url = 'http://localhost:3000/ips';
-
+        let url = process.env.VUE_APP_DATABASE + '/ips';
         let options = {method: 'GET'};
         let data
         await fetch(url, options)
