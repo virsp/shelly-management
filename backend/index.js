@@ -1,8 +1,10 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
+var cors = require('cors')
 const data = require('./data');
 const port = 3000;
 
+app.use(cors())
 console.log('Starting express on port ' + port);
 
 app.get('/ips', (req, res) => {
