@@ -1,0 +1,12 @@
+version: '3'
+services:
+  web:
+    build: ./frontend
+    image: virsp/shelly-management-web
+    ports:
+      - 8080:80
+  backend:
+    build: ./backend
+    image: virsp/node-database
+    ports:
+      - 3000:3000
