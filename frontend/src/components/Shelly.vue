@@ -1,123 +1,164 @@
 <template>
     <div class="row">
         <div class="col-auto">
-            <b-card v-bind:title="settings.device.type + ' - ' + settings.name" border-variant="info">
-                <b-card-text>
-					<!-- WIFI AT -->
-                    <div class="mb-0 ">
-                        <div class="text-left">
-							<b-icon v-if="this.toggle[0]" id="clickable" ref="click" @click="showMore(0)" icon="chevron-double-down"></b-icon>
-							<b-icon v-else id="clickable" ref="click" @click="showMore(0)" icon="chevron-double-right"></b-icon>
-                             Wifi AP - <b v-bind:class="{'text-success': settings.wifi_ap.enabled, 'text-danger': !settings.wifi_ap.enabled}">{{settings.wifi_ap.enabled}}</b>
-                        </div>
-                        <div v-if="this.toggle[0]">
-                            <div class="row pl-4" v-for="(value, name) in removeEnable(settings.wifi_ap)" v-bind:key="value">
-                                <div class="text-capitalize">{{name}}</div>: {{value}}
-                            </div>
+			<b-overlay :show="this.loading" rounded="sm">
+				<b-card v-if="true" border-variant="info" align="center" style="width: 25rem">
+					<b-card-title class="mb-0">{{settings.name}}</b-card-title>
+					<div>
+						{{settings.device.type}} - {{this.ip}}
+					</div>
+					<div>
+						{{this.ota.old_version}}
+					</div>
+					<div v-if="this.ota.has_update" class="text-primary mb-0">
+						<b>Update available</b> 
+						<p class="fw-italic">{{this.ota.new_version}}</p>
+					</div>
+					
+					<b-card-text >
+							<!-- WIFI AT -->
+							<div class="mb-0 ">
+								<div class="text-left">
+									<b-icon v-if="this.toggle[0]" id="clickable" ref="click" @click="showMore(0)" icon="chevron-double-down"></b-icon>
+									<b-icon v-else id="clickable" ref="click" @click="showMore(0)" icon="chevron-double-right"></b-icon>
+										Wifi AP - <b v-bind:class="{'text-success': settings.wifi_ap.enabled, 'text-danger': !settings.wifi_ap.enabled}">{{settings.wifi_ap.enabled}}</b>
+								</div>
+								<div v-if="this.toggle[0]">
+									<div class="row pl-4" v-for="(value, name) in removeEnable(settings.wifi_ap)" v-bind:key="value">
+										<div class="text-capitalize">{{name}}</div>: {{value}}
+									</div>
 
-                        </div>
-                    </div>
+								</div>
+							</div>
 
-					<!-- WIFI STA -->
-                    <div class="mb-0">
-                        <div class="text-left">
-                            <b-icon v-if="this.toggle[1]" id="clickable" ref="click" @click="showMore(1)" icon="chevron-double-down"></b-icon> 
-                            <b-icon v-else id="clickable" ref="click" @click="showMore(1)" icon="chevron-double-right"></b-icon> 
-							Wifi STA - <b v-bind:class="{'text-success': settings.wifi_sta.enabled, 'text-danger': !settings.wifi_sta.enabled}">{{settings.wifi_sta.enabled}}</b>
-                        </div>
+							<!-- WIFI STA -->
+							<div class="mb-0">
+								<div class="text-left">
+									<b-icon v-if="this.toggle[1]" id="clickable" ref="click" @click="showMore(1)" icon="chevron-double-down"></b-icon> 
+									<b-icon v-else id="clickable" ref="click" @click="showMore(1)" icon="chevron-double-right"></b-icon> 
+									Wifi STA - <b v-bind:class="{'text-success': settings.wifi_sta.enabled, 'text-danger': !settings.wifi_sta.enabled}">{{settings.wifi_sta.enabled}}</b>
+								</div>
 
-                        <div v-if="this.toggle[1]">
-                            <div class="row pl-4" v-for="(value, name) in removeEnable(settings.wifi_sta)" v-bind:key="name">
-                                <div class="text-capitalize">{{name}}</div>: {{value}}
-                            </div>
-                        </div>
-                    </div>
-                    
-					<!-- MQTT -->
-                    <div class="mb-0">
-                        <div class="text-left">
-                            <b-icon v-if="this.toggle[2]" id="clickable" ref="click" @click="showMore(2)" icon="chevron-double-down"></b-icon> 
-                            <b-icon v-else id="clickable" ref="click" @click="showMore(2)" icon="chevron-double-right"></b-icon> 
-							MQTT - <b v-bind:class="{'text-success': settings.mqtt.enable, 'text-danger': !settings.mqtt.enable}">{{settings.mqtt.enable}}</b>
-                        </div>
-                        
-						<div v-if="this.toggle[2]">
-                            <div class="row pl-4" v-for="(value, name) in removeEnable(settings.mqtt)" v-bind:key="name">
-                                <div class="text-capitalize">{{name}}</div>: {{value}}
-                            </div>
-                        </div>
-                    </div> 
+								<div v-if="this.toggle[1]">
+									<div class="row pl-4" v-for="(value, name) in removeEnable(settings.wifi_sta)" v-bind:key="name">
+										<div class="text-capitalize">{{name}}</div>: {{value}}
+									</div>
+								</div>
+							</div>
+							
+							<!-- MQTT -->
+							<div class="mb-0">
+								<div class="text-left">
+									<b-icon v-if="this.toggle[2]" id="clickable" ref="click" @click="showMore(2)" icon="chevron-double-down"></b-icon> 
+									<b-icon v-else id="clickable" ref="click" @click="showMore(2)" icon="chevron-double-right"></b-icon> 
+									MQTT - <b v-bind:class="{'text-success': settings.mqtt.enable, 'text-danger': !settings.mqtt.enable}">{{settings.mqtt.enable}}</b>
+								</div>
+								
+								<div v-if="this.toggle[2]">
+									<div class="row pl-4" v-for="(value, name) in removeEnable(settings.mqtt)" v-bind:key="name">
+										<div class="text-capitalize">{{name}}</div>: {{value}}
+									</div>
+								</div>
+							</div> 
 
-					<!-- CoIoT -->
-                    <div class="mb-0">
-                        <div class="text-left">
-                            <b-icon v-if="this.toggle[3]" id="clickable" ref="click" @click="showMore(3)" icon="chevron-double-down"></b-icon> 
-                            <b-icon v-else id="clickable" ref="click" @click="showMore(3)" icon="chevron-double-right"></b-icon> 
-							CoIoT - <b v-bind:class="{'text-success': settings.coiot.enabled, 'text-danger': !settings.coiot.enabled}">{{settings.coiot.enabled}}</b>
-                        </div>
-                        
-						<div v-if="this.toggle[3]">
-                            <div class="row pl-4" v-for="(value, name) in removeEnable(settings.coiot)" v-bind:key="name">
-                                <div class="text-capitalize">{{name}}</div>: {{value}}
-                            </div>
-                        </div>
-                    </div> 
+							<!-- CoIoT -->
+							<div class="mb-0">
+								<div class="text-left">
+									<b-icon v-if="this.toggle[3]" id="clickable" ref="click" @click="showMore(3)" icon="chevron-double-down"></b-icon> 
+									<b-icon v-else id="clickable" ref="click" @click="showMore(3)" icon="chevron-double-right"></b-icon> 
+									CoIoT - <b v-bind:class="{'text-success': settings.coiot.enabled, 'text-danger': !settings.coiot.enabled}">{{settings.coiot.enabled}}</b>
+								</div>
+								
+								<div v-if="this.toggle[3]">
+									<div class="row pl-4" v-for="(value, name) in removeEnable(settings.coiot)" v-bind:key="name">
+										<div class="text-capitalize">{{name}}</div>: {{value}}
+									</div>
+								</div>
+							</div> 
 
-					<!-- SNTP -->
-                    <div class="mb-0">
-                        <div class="text-left">
-                            <b-icon v-if="this.toggle[4]" id="clickable" ref="click" @click="showMore(4)" icon="chevron-double-down"></b-icon> 
-                            <b-icon v-else id="clickable" ref="click" @click="showMore(4)" icon="chevron-double-right"></b-icon> 
-							SNTP - <b v-bind:class="{'text-success': settings.sntp.enabled, 'text-danger': !settings.sntp.enabled}">{{settings.sntp.enabled}}</b>
-                        </div>
-                        
-						<div v-if="this.toggle[4]">
-                            <div class="row pl-4" v-for="(value, name) in removeEnable(settings.sntp)" v-bind:key="name">
-                                <div class="text-capitalize">{{name}}</div>: {{value}}
-                            </div>
-                        </div>
-                    </div> 
+							<!-- SNTP -->
+							<div class="mb-0">
+								<div class="text-left">
+									<b-icon v-if="this.toggle[4]" id="clickable" ref="click" @click="showMore(4)" icon="chevron-double-down"></b-icon> 
+									<b-icon v-else id="clickable" ref="click" @click="showMore(4)" icon="chevron-double-right"></b-icon> 
+									SNTP - <b v-bind:class="{'text-success': settings.sntp.enabled, 'text-danger': !settings.sntp.enabled}">{{settings.sntp.enabled}}</b>
+								</div>
+								
+								<div v-if="this.toggle[4]">
+									<div class="row pl-4" v-for="(value, name) in removeEnable(settings.sntp)" v-bind:key="name">
+										<div class="text-capitalize">{{name}}</div>: {{value}}
+									</div>
+								</div>
+							</div> 
 
-					<!-- Login -->
-                    <div class="mb-0">
-                        <div class="text-left">
-                            <b-icon v-if="this.toggle[5]" id="clickable" ref="click" @click="showMore(5)" icon="chevron-double-down"></b-icon> 
-                            <b-icon v-else id="clickable" ref="click" @click="showMore(5)" icon="chevron-double-right"></b-icon> 
-							Login - <b v-bind:class="{'text-success': settings.login.enabled, 'text-danger': !settings.login.enabled}">{{settings.login.enabled}}</b>
-                        </div>
-                        
-						<div v-if="this.toggle[5]">
-                            <div class="row pl-4" v-for="(value, name) in removeEnable(settings.login)" v-bind:key="name">
-                                <div class="text-capitalize">{{name}}</div>: {{value}}
-                            </div>
-                        </div>
-                    </div>
+							<!-- Login -->
+							<div class="mb-0">
+								<div class="text-left">
+									<b-icon v-if="this.toggle[5]" id="clickable" ref="click" @click="showMore(5)" icon="chevron-double-down"></b-icon> 
+									<b-icon v-else id="clickable" ref="click" @click="showMore(5)" icon="chevron-double-right"></b-icon> 
+									Login - <b v-bind:class="{'text-success': settings.login.enabled, 'text-danger': !settings.login.enabled}">{{settings.login.enabled}}</b>
+								</div>
+								
+								<div v-if="this.toggle[5]">
+									<div class="row pl-4" v-for="(value, name) in removeEnable(settings.login)" v-bind:key="name">
+										<div class="text-capitalize">{{name}}</div>: {{value}}
+									</div>
+								</div>
+							</div>
 
-					<!-- CLOUD -->
-                    <div class="mb-0">
-                        <div class="text-left">
-                            <b-icon v-if="this.toggle[6]" id="clickable" ref="click" @click="showMore(6)" icon="chevron-double-down"></b-icon> 
-                            <b-icon v-else id="clickable" ref="click" @click="showMore(6)" icon="chevron-double-right"></b-icon> 
-							Cloud - <b v-bind:class="{'text-success': settings.cloud.enabled, 'text-danger': !settings.cloud.enabled}">{{settings.cloud.enabled}}</b>
-                        </div>
-                        
-						<div v-if="this.toggle[6]">
-                            <div class="row pl-4" v-for="(value, name) in removeEnable(settings.cloud)" v-bind:key="name">
-                                <div class="text-capitalize">{{name}}</div>: {{value}}
-                            </div>
-                        </div>
-                    </div> 
-                   
-                </b-card-text>
-            </b-card>
-
+							<!-- CLOUD -->
+							<div class="mb-0">
+								<div class="text-left">
+									<b-icon v-if="this.toggle[6]" id="clickable" ref="click" @click="showMore(6)" icon="chevron-double-down"></b-icon> 
+									<b-icon v-else id="clickable" ref="click" @click="showMore(6)" icon="chevron-double-right"></b-icon> 
+									Cloud - <b v-bind:class="{'text-success': settings.cloud.enabled, 'text-danger': !settings.cloud.enabled}">{{settings.cloud.enabled}}</b>
+								</div>
+								
+								<div v-if="this.toggle[6]">
+									<div class="row pl-4" v-for="(value, name) in removeEnable(settings.cloud)" v-bind:key="name">
+										<div class="text-capitalize">{{name}}</div>: {{value}}
+									</div>
+								</div>
+							</div> 
+						<div>
+							
+							<div v-if="this.ota.has_update">
+								<div v-if="!this.updating">
+									<b-button @click="updateFirmware()" variant="primary">Update</b-button>
+								</div>
+								<div v-else>
+									<b-button @click="updateFirmware()" variant="primary" disabled>Update in progress</b-button>
+								</div>
+							</div>
+							<div v-else>
+								{{settings.device.type}} running the latest firmware
+							</div>
+						</div>
+		
+					</b-card-text>
+				</b-card>
+			</b-overlay>
+		
         </div>
     </div>
 </template>
 <script>
+import {shelly} from '../../api/shelly';
+import dummyData from '../assets/dummyData'
 export default {
-    name: "Shelly",
-    
+	name: "Shelly",
+    props: ['ip'],
+	data() {
+		return {
+			verbose: [],
+			temp: false,
+			toggle:[],
+			ota: {},
+			settings: dummyData,
+			loading: false,
+			updating: false,
+		}    
+	},
     methods: {
         removeEnable(obj){
             const asArray = Object.entries(obj);
@@ -131,21 +172,6 @@ export default {
             if(this.toggle[i]) this.$set(this.toggle, i, false); 
             else this.$set(this.toggle, i, true);
         },
-        test(){
-            console.log(this.$el);
-            console.log(this.$refs);
-            let verboseNode = this.$refs.click.nextSibling.nodeValue;
-            console.log(this.verbose.includes(verboseNode));
-            if(this.verbose.includes(verboseNode)){
-                this.verbose = this.verbose.filter(key => key !== verboseNode);
-                // console.log(this.verbose);
-            }else {
-                console.log('clicked ' + verboseNode);
-                this.verbose.push(verboseNode)
-            }
-            console.log(this.verbose);
-            
-        },
         checkVerbose(){
             if(this.$refs.click){
                 console.log("check verbose");
@@ -158,133 +184,58 @@ export default {
             }else {
                 return false;
             }
+        },
+		async updateFirmware(){
+			console.log('firmware update issued');
+			this.updating = true;
+			this.loading = true;
+			await new Promise(resolve => setTimeout(resolve, 2000));
+			this.checkUpdatingStatus();
+			
+			await shelly.updateFirmware(this.ip);
+		},
+		async checkUpdatingStatus(){
+			let ota = {
+				status: 'updating'
+			}
+			while (ota.status === 'updating' || ota.status === 'unknown' ) {
+				ota = await shelly.getOTA(this.ip)
+				if(ota.status === 'idle'){
+					this.updating = false;
+					this.loading = false;
+				}
+				await new Promise(resolve => setTimeout(resolve, 200));
+			}
+			this.ota = ota;
+		},
+		async fetchSettings(){
+			this.loading = true;
+			await new Promise(resolve => setTimeout(resolve, 2000));
+			console.log('fetching settings for ' + this.ip);
+			// let temp = await db.fetchLocalShellySettings(this.ip)
+			let temp = await shelly.getSettings(this.ip);
+			console.log(temp);
+			this.loading = false;
+			this.settings = temp;
+		},
+		async fetchOTA(){
+			this.loading = true;
+			await new Promise(resolve => setTimeout(resolve, 2000));
+			console.log('fetching OTA for ' + this.ip);
 
-        }
-    },
-    data() {
-        return {
-            verbose: [],
-            temp: false,
-            toggle:[false, false, false, false],
-            settings: {
-	"device": {
-		"type": "SHPLG-S",
-		"mac": "24A1602154DC",
-		"hostname": "shellyplug-s-2154DC",
-		"num_outputs": 1,
-		"num_meters": 1
-	},
-	"wifi_ap": {
-		"enabled": false,
-		"ssid": "shellyplug-s-2154DC",
-		"key": ""
-	},
-	"wifi_sta": {
-		"enabled": true,
-		"ssid": "gud.net",
-		"ipv4_method": "dhcp",
-		"ip": null,
-		"gw": null,
-		"mask": null,
-		"dns": null
-	},
-	"wifi_sta1": {
-		"enabled": false,
-		"ssid": null,
-		"ipv4_method": "dhcp",
-		"ip": null,
-		"gw": null,
-		"mask": null,
-		"dns": null
-	},
-	"ap_roaming": {
-		"enabled": false,
-		"threshold": -70
-	},
-	"mqtt": {
-		"enable": true,
-		"server": "192.168.253.234:1883",
-		"user": "mqtt",
-		"id": "shelly_hallen",
-		"reconnect_timeout_max": 60.000000,
-		"reconnect_timeout_min": 2.000000,
-		"clean_session": true,
-		"keep_alive": 60,
-		"max_qos": 0,
-		"retain": true,
-		"update_period": 30
-	},
-	"coiot": {
-		"enabled": true,
-		"update_period": 15,
-		"peer": ""
-	},
-	"sntp": {
-		"server": "time.google.com",
-		"enabled": true
-	},
-	"login": {
-		"enabled": false,
-		"unprotected": false,
-		"username": "admin"
-	},
-	"pin_code": "",
-	"name": "Lampa Hall",
-	"fw": "20211109-130223/v1.11.7-g682a0db",
-	"discoverable": true,
-	"build_info": {
-		"build_id": "20211109-130223/v1.11.7-g682a0db",
-		"build_timestamp": "2021-11-09T13:02:23Z",
-		"build_version": "1.0"
-	},
-	"cloud": {
-		"enabled": false,
-		"connected": false
-	},
-	"timezone": "Europe/Stockholm",
-	"lat": 59.344490,
-	"lng": 18.039490,
-	"tzautodetect": true,
-	"tz_utc_offset": 3600,
-	"tz_dst": false,
-	"tz_dst_auto": true,
-	"time": "22:32",
-	"unixtime": 1641677560,
-	"led_status_disable": false,
-	"debug_enable": false,
-	"allow_cross_origin": false,
-	"actions": {
-		"active": false,
-		"names": [
-			"btn_on_url",
-			"out_on_url",
-			"out_off_url"
-		]
-	},
-	"hwinfo": {
-		"hw_revision": "prod-190516",
-		"batch_id": 1
-	},
-	"max_power": 1800,
-	"led_status_disable": false,
-	"led_power_disable": false,
-	"relays": [
-		{
-			"name": null,
-			"appliance_type": "Uttag",
-			"ison": true,
-			"has_timer": false,
-			"default_state": "off",
-			"auto_on": 0.00,
-			"auto_off": 0.00,
-			"schedule": false,
-			"schedule_rules": [],
-			"max_power": 1800
+			let temp = await shelly.getOTA(this.ip);
+			console.log(temp);
+			this.loading = false;
+			this.ota = temp;
+			this.ota.has_update = true;
+
 		}
-	]
-},
-        }
     },
+	mounted() {
+		this.fetchSettings();
+		this.fetchOTA();
+	},
+
     
 }
 </script>
