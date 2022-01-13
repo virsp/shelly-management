@@ -143,8 +143,8 @@
     </div>
 </template>
 <script>
-import {shelly} from '../../api/shelly';
-import dummyData from '../assets/dummyData'
+import {shelly} from '@/api/shelly';
+import dummyData from '@/assets/dummyData'
 export default {
 	name: "Shelly",
     props: ['ip'],
@@ -211,23 +211,20 @@ export default {
 		async fetchSettings(){
 			this.loading = true;
 			await new Promise(resolve => setTimeout(resolve, 2000));
-			console.log('fetching settings for ' + this.ip);
-			// let temp = await db.fetchLocalShellySettings(this.ip)
-			let temp = await shelly.getSettings(this.ip);
-			console.log(temp);
+			
+			// console.log('fetching settings for ' + this.ip);
+
+			this.settings = await shelly.getSettings(this.ip);
 			this.loading = false;
-			this.settings = temp;
 		},
 		async fetchOTA(){
 			this.loading = true;
 			await new Promise(resolve => setTimeout(resolve, 2000));
-			console.log('fetching OTA for ' + this.ip);
 
-			let temp = await shelly.getOTA(this.ip);
-			console.log(temp);
+			// console.log('fetching OTA for ' + this.ip);
+
+			this.ota = await shelly.getOTA(this.ip);
 			this.loading = false;
-			this.ota = temp;
-			this.ota.has_update = true;
 
 		}
     },
