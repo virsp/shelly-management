@@ -8,8 +8,14 @@ app.use(cors())
 console.log('Starting express on port ' + port);
 
 app.get('/ips', (req, res) => {
-    console.log('get ip request');
-    res.send(data.getIPS())
+    console.log('Get IP request from ' + req.hostname);
+    if (data.getIPS().ips.length == 0) {
+        res.status(500).json({
+            'msg': 'No entries in the database!'
+        })
+    }else {
+        res.send(data.getIPS())
+    }
 })
 
 app.post('/add', (req,res) => {

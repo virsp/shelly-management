@@ -2,8 +2,8 @@
     <div class="row pt-2">
         <div class="col">
             <h1>Shelly overview</h1>
-            <div v-if="this.shellies" class="row">
-                <div v-for="shelly in this.shellies" class="col-auto">
+            <div v-if="this.shellies" class="row justify-content-md-center">
+                <div v-for="shelly in this.shellies" class="col-auto pb-4" v-bind="shelly">
                     <Shelly :ip="shelly"/>
                 </div>
             </div>
