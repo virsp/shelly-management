@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <b-navbar toggleable="lg" type="dark" variant="dark">
-       <b-navbar-brand href="#">Shelly management</b-navbar-brand>
+       <b-navbar-brand href="#" @click="toDashboard()">Shelly management</b-navbar-brand>
        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
        <b-collapse id="nav-collapse" is-nav>
          <b-navbar-nav>
            <b-nav-item><router-link tag="li" to="/about">About</router-link></b-nav-item>
-           <b-nav-item><router-link tag="li" to="/dashboard">Dashboard</router-link></b-nav-item>
+           <b-nav-item><router-link tag="li" to="/">Dashboard</router-link></b-nav-item>
          </b-navbar-nav>
        </b-collapse>
     </b-navbar>
@@ -16,7 +16,15 @@
     </div>
   </div>
 </template>
-
+<script>
+export default {
+  methods: {
+    toDashboard(){
+      this.$router.push('/');
+    }
+  },
+}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
