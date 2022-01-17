@@ -3,7 +3,7 @@
         <div class="col">
             <h1>Shelly overview</h1>
             <div v-if="this.shellies" class="row justify-content-md-center">
-                <div v-for="shelly in this.shellies" class="col-auto pb-4" v-bind="shelly">
+                <div v-for="shelly in this.shellies" class="col-auto pb-4" v-bind:key="shelly">
                     <Shelly :ip="shelly"/>
                 </div>
             </div>
@@ -26,6 +26,7 @@ export default {
     },
     methods: {
         async getDeviceIPS(){
+            console.log('gjeksdfa');
             let temp = await db.getIPS();
             this.shellies = temp.ips;
             logger.log(this.shellies);
