@@ -5,7 +5,6 @@ let shellies;
 try {
     shellies = require('./ips.json');    
 } catch (error) {
-    console.log(error);
     console.log('No data file found, init new');
     shellies = {
         ips: []
