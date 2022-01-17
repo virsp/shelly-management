@@ -5,7 +5,6 @@
        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
        <b-collapse id="nav-collapse" is-nav>
          <b-navbar-nav>
-           <b-nav-item><router-link tag="li" to="/home">Home</router-link></b-nav-item>
            <b-nav-item><router-link tag="li" to="/about">About</router-link></b-nav-item>
            <b-nav-item><router-link tag="li" to="/dashboard">Dashboard</router-link></b-nav-item>
          </b-navbar-nav>
