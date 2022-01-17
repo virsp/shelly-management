@@ -11,7 +11,7 @@ A shelly dashboard to monitor shelly devices
 - [ ] Device reboot
 - [ ] Provide OTA override, with custom firmware links
 - [ ] Per device support, as for now only common HTTP API will be focused on
-- [ ] Override DB API
+- [ ] Override DB API ip
 
 ### Backend 
 - [ ] Device auto discovery
