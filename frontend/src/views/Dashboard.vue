@@ -12,31 +12,31 @@
 </template>
 <script>
 import Shelly from '@/components/Shelly.vue';
-import {db} from '@/api/database';
+import { db } from '@/api/database';
 import logger from '@/plugins/logger';
 export default {
     name: 'Dashboard',
     components: {
-        Shelly,
+        Shelly
     },
-    data() {
+    data () {
         return {
-            shellies: null,
-        }
+            shellies: null
+        };
     },
     methods: {
-        async getDeviceIPS(){
+        async getDeviceIPS () {
             console.log('gjeksdfa');
-            let temp = await db.getIPS();
+            const temp = await db.getIPS();
             this.shellies = temp.ips;
             logger.log(this.shellies);
         }
     },
-    mounted() {
+    mounted () {
         this.getDeviceIPS();
-    },
-}
+    }
+};
 </script>
 <style>
-    
+
 </style>

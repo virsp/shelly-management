@@ -18,12 +18,12 @@
 </template>
 <script>
 export default {
-  methods: {
-    toDashboard(){
-      this.$router.push('/');
+    methods: {
+        toDashboard () {
+            this.$router.push('/');
+        }
     }
-  },
-}
+};
 </script>
 <style>
 #app {
@@ -51,7 +51,7 @@ nav li.router-link-active,
 nav li.router-link-exact-active {
    /* background-color: rgb(52, 159, 201); */
    font-weight: bolder;
-   
+
    cursor: pointer;
  }
 </style>

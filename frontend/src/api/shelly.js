@@ -1,61 +1,60 @@
-const fetch = require('node-fetch');
 import logger from '@/plugins/logger';
+const fetch = require('node-fetch');
 
-let shelly = {
+const shelly = {
     getStatus: async (ip) => {
+        const url = 'http://' + ip + '/shelly';
+        const options = { method: 'GET' };
+        let data;
+        await fetch(url, options)
+            .then(res => res.json())
+            .then(json => {
+                data = json;
+            })
+            .catch(err => logger.error('error:' + err));
 
-    let url = 'http://' + ip + '/shelly';
-    let options = {method: 'GET'};
-    let data;
-    await fetch(url, options)
-        .then(res => res.json())
-        .then(json => {
-            data = json
-        })
-        .catch(err => logger.error('error:' + err));
-    
-    return data;
+        return data;
     },
 
     getSettings: async (ip) => {
-        let url = 'http://' + ip + '/settings';
-        
-        let options = {method: 'GET'};
+        const url = 'http://' + ip + '/settings';
+
+        const options = { method: 'GET' };
         let data;
         await fetch(url, options)
-        .then(res => res.json())
-        .then(json => {
-            data = json;
-        })
-        .catch(err => logger.error('error:' + err));
+            .then(res => res.json())
+            .then(json => {
+                data = json;
+            })
+            .catch(err => logger.error('error:' + err));
         return data;
     },
     getOTA: async (ip) => {
-        let url = 'http://' + ip + '/ota';
-        let options = {method: 'GET'};
+        const url = 'http://' + ip + '/ota';
+        const options = { method: 'GET' };
         let data;
         await fetch(url, options)
-        .then(res => res.json())
-        .then(json => {
-            data = json
-        })
-        .catch(err => logger.error('error:' + err));
-    
+            .then(res => res.json())
+            .then(json => {
+                data = json;
+            })
+            .catch(err => logger.error('error:' + err));
+
         return data;
     },
     updateFirmware: async (ip) => {
-        let url = 'http://' + ip + '/ota?update=true';
-        let options = {method: 'GET'};
+        const url = 'http://' + ip + '/ota?update=true';
+        const options = { method: 'GET' };
         let data;
         await fetch(url, options)
-        .then(res => res.json())
-        .then(json => {
-            data = json
-        })
-        .catch(err => logger.error('error:' + err));
+            .then(res => res.json())
+            .then(json => {
+                data = json;
+            })
+            .catch(err => logger.error('error:' + err));
         return data;
     }
 
-}
+};
 
-export {shelly};
+export { shelly };
