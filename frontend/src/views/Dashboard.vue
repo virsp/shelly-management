@@ -3,7 +3,7 @@
         <div class="col">
             <h1>Shelly overview</h1>
             <div v-if="this.shellies" class="row justify-content-md-center">
-                <div v-for="shelly in this.shellies" class="col-auto pb-4" v-bind:key="shelly">
+                <div v-for="shelly in shellies.ips" class="col-auto pb-4" v-bind:key="shelly">
                     <Shelly :ip="shelly"/>
                 </div>
             </div>
@@ -12,25 +12,21 @@
 </template>
 <script>
 import Shelly from '@/components/Shelly.vue';
-import { db } from '@/api/database';
 import logger from '@/plugins/logger';
+import { mapGetters } from 'vuex';
 export default {
     name: 'Dashboard',
     components: {
         Shelly
     },
-    data () {
-        return {
-            shellies: null
-        };
-    },
     methods: {
         async getDeviceIPS () {
-            console.log('gjeksdfa');
-            const temp = await db.getIPS();
-            this.shellies = temp.ips;
+            this.$store.dispatch('getIPS');
             logger.log(this.shellies);
         }
+    },
+    computed: {
+        ...mapGetters({ shellies: 'getIPS' })
     },
     mounted () {
         this.getDeviceIPS();
