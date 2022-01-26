@@ -32,6 +32,20 @@ export default new Vuex.Store({
     getters: {
         getIPS (state) {
             return state.ips;
+        },
+        getIPSAsObject (state) {
+            const temp = [];
+            if (state.ips.length === 0) {
+                logger.log('ips is empty');
+            } else {
+                state.ips.ips.forEach(ip => {
+                    logger.log(ip);
+                    const obj = { ip: ip };
+                    temp.push(obj);
+                });
+                logger.log(temp);
+            }
+            return temp;
         }
     },
     modules: {
