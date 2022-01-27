@@ -5,7 +5,7 @@ const data = require('./data');
 const port = 3000;
 
 app.use(cors())
-console.log('Starting express on port ' + port);
+
 
 app.get('/ips', (req, res) => {
     console.log('Get IP request from ' + req.hostname);
@@ -39,4 +39,6 @@ app.delete('/remove', async (req, res) => {
     }
 })
 
-app.listen(port)
+app.listen(port, () => {
+    console.log('Starting express on port ' + port);
+})
