@@ -11,12 +11,12 @@ A shelly dashboard to monitor shelly devices
 - [ ] Device reboot
 - [ ] Provide OTA override, with custom firmware links
 - [ ] Per device support, as for now only common HTTP API will be focused on
-- [ ] Override DB API ip
+- [x] Override DB API ip
 
 ### Backend 
 - [ ] Device auto discovery
-- [ ] Prevent duplicate IP adresses 
-- [ ] Improve error handling and client responses
+- [x] Prevent duplicate IP adresses 
+- [x] Improve error handling and client responses
 
 ### Docker
 - [ ] Pass env via docker-compose to frontend to allow for less configuration before build
