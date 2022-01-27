@@ -18,9 +18,13 @@ app.get('/ips', (req, res) => {
     }
 })
 
-app.post('/add', (req,res) => {
-    data.addIP(req.query.ip);
-    res.status(200).send('Succesfully stored ' + req.query.ip);    
+app.post('/add', async (req,res) => {
+    try {
+        await data.addIP(req.query.ip);
+        res.status(200).send('Succesfully stored ' + req.query.ip);    
+    } catch (err) {
+        res.status(409).json({error: err.message})
+    }
 })
 
 app.listen(port)
