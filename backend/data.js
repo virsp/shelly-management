@@ -54,7 +54,7 @@ function getIPS(){
  * if ip already exists it throws error 
  * @param {String} ip to be removed
  */
-function removeIP(ip){
+async function removeIP(ip){
     if(!shellies.has(ip)){
         throw new Error(ip + 'does not exist in the db');
     }
