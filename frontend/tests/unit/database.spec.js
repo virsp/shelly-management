@@ -13,3 +13,17 @@ test('Get ips from database', async () => {
     console.log(data);
     expect(data).toStrictEqual(obj);
 });
+test('Add ip to database', async () => {
+    const ipToBeAdded = '192.192.192.192';
+    await db.addIP(ipToBeAdded);
+    const data = await db.getIPS();
+    const ips = data.ips;
+    expect(ips[ips.length - 1]).toBe(ipToBeAdded);
+});
+test('Remove ip from database', async () => {
+    const ipToBeRemoved = '192.192.192.192';
+    await db.removeIP(ipToBeRemoved);
+    let data = await db.getIPS().ips;
+    data = new Set(data);
+    expect(data.has(ipToBeRemoved)).toBeFalsy();
+});

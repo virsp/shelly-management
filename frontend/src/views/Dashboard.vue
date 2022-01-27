@@ -27,9 +27,6 @@ export default {
     },
     computed: {
         ...mapGetters({ shellies: 'getIPS' })
-    },
-    mounted () {
-        this.getDeviceIPS();
     }
 };
 </script>

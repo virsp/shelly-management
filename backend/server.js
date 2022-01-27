@@ -5,7 +5,7 @@ const data = require('./data');
 const port = 3000;
 
 app.use(cors())
-console.log('Starting express on port ' + port);
+
 
 app.get('/ips', (req, res) => {
     console.log('Get IP request from ' + req.hostname);
@@ -18,9 +18,27 @@ app.get('/ips', (req, res) => {
     }
 })
 
-app.post('/add', (req,res) => {
-    data.addIP(req.query.ip);
-    res.status(200).send('Succesfully stored ' + req.query.ip);    
+app.post('/add', async (req,res) => {
+    try {
+        await data.addIP(req.query.ip);
+        res.status(200).json({msg: 'Succesfully stored ' + req.query.ip});    
+    } catch (err) {
+        res.status(409).json({error: err.message})
+    }
 })
 
-app.listen(port)
+app.delete('/remove', async (req, res) => {
+    try {
+        console.log('Attempting to remove ' + req.query.ip + ' from db...');
+        await data.removeIP(req.query.ip);
+        console.log('removal succeful!');
+        res.status(200).json({msg: 'Succesfully removed ' + req.query.ip});    
+    } catch (err) {
+        console.log(err.message);
+        res.status(409).json({error: err.message})
+    }
+})
+
+app.listen(port, () => {
+    console.log('Starting express on port ' + port);
+})

@@ -20,6 +20,13 @@ const routes = [
         component: function () {
             return import('../views/Dashboard.vue');
         }
+    },
+    {
+        path: '/configure',
+        name: 'Configure',
+        component: function () {
+            return import('../views/Configure.vue');
+        }
     }
 ];
 
