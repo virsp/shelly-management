@@ -20,3 +20,10 @@ test('Add ip to database', async () => {
     const ips = data.ips;
     expect(ips[ips.length - 1]).toBe(ipToBeAdded);
 });
+test('Remove ip from database', async () => {
+    const ipToBeRemoved = '192.192.192.192';
+    await db.removeIP(ipToBeRemoved);
+    let data = await db.getIPS().ips;
+    data = new Set(data);
+    expect(data.has(ipToBeRemoved)).toBeFalsy();
+});
