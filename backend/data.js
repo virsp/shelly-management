@@ -65,4 +65,4 @@ function removeIP(ip){
         throw error;
     }
 }
-module.exports = {addIP, getIPS};
+module.exports = {addIP, getIPS, removeIP};
