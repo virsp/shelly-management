@@ -27,6 +27,15 @@ export default new Vuex.Store({
             } catch (error) {
                 logger.error(error);
             }
+        },
+        /**
+         * Attempts to add the ip to the database
+         * @param {*} state
+         * @param {String} ip to be added to database
+         */
+        async addIP (state, ip) {
+            await db.addIP(ip);
+            await state.dispatch('getIPS');
         }
     },
     getters: {
