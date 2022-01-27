@@ -15,6 +15,8 @@ A shelly dashboard to monitor shelly devices
 
 ### Backend 
 - [ ] Device auto discovery
+- [ ] Prevent duplicate IP adresses 
+- [ ] Improve error handling and client responses
 
 ### Docker
 - [ ] Pass env via docker-compose to frontend to allow for less configuration before build
