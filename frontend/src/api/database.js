@@ -29,6 +29,11 @@ const db = {
         const url = process.env.VUE_APP_DATABASE + '/add?ip=' + ip;
         const options = { method: 'POST' };
         return await sendRequest(url, options);
+    },
+    removeIP: async (ip) => {
+        const url = process.env.VUE_APP_DATABASE + '/remove?ip=' + ip;
+        const options = { method: 'DELETE' };
+        return await sendRequest(url, options);
     }
 };
 
