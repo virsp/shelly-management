@@ -56,7 +56,7 @@ function getIPS(){
  */
 async function removeIP(ip){
     if(!shellies.has(ip)){
-        throw new Error(ip + 'does not exist in the db');
+        throw new Error(ip + ' does not exist in the db');
     }
     try {
         shellies.delete(ip);
