@@ -3,15 +3,21 @@ A shelly dashboard to monitor shelly devices
 
 ## Some suggest improvements
 ### Frontend
-- [ ] Change per device settings
+
 - [ ] Auto enable CORS on device
-- [ ] Support for HTTP authentication
-- [ ] Configure STA 
-- [ ] Configure actions
-- [ ] Device reboot
-- [ ] Provide OTA override, with custom firmware links
+- [ ] Vuex
+  - [ ] Save more device info in store to prevent unnecessary request to devices
+- [ ] Configure
+  - [ ] Configure STA 
+  - [ ] Configure actions
+  - [ ] Change per device settings
+  - [ ] Provide OTA override, with custom firmware links
+  - [ ] Support for HTTP authentication
+  - [x] Override DB API ip
+- [ ] Dashboard
+  - [ ] Device reboot
 - [ ] Per device support, as for now only common HTTP API will be focused on
-- [x] Override DB API ip
+
 
 ### Backend 
 - [ ] Device auto discovery
