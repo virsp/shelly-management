@@ -6,10 +6,12 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <b-form>
+            <b-form class="col-auto" @submit.stop.prevent="saveIP()">
                 <label for="add-ip">Add a IP to the database</label>
-
-                <b-form-input v-model="ip" id="add-ip"></b-form-input>
+                <b-input-group>
+                    <b-form-input v-model="ip" id="add-ip" placeholder="e.g. 192.192.192.192"></b-form-input>
+                    <b-button @click="saveIP()" variant="primary">Save</b-button>
+                </b-input-group>
             </b-form>
         </div>
         <div class="row justify-content-center">
@@ -31,10 +33,13 @@
                 </b-table>
             </div>
         </div>
+        <div v-if="this.delete > 0" class="row justify-content-center">
+            <b-button @click="removeIP()" variant=danger>Remove selected</b-button>
+        </div>
     </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import logger from '@/plugins/logger';
 export default {
     name: 'Configuration',
@@ -42,6 +47,7 @@ export default {
         return {
             ip: null,
             ips: [],
+            delete: 0,
             fields: [
                 'IP',
                 { key: 'del', label: 'Remove time' }
@@ -49,10 +55,29 @@ export default {
         };
     },
     methods: {
+        ...mapActions({ addToDB: 'addIP', removeFromDB: 'removeIP' }),
         removeTime (i) {
-            this.shellies[i]._rowVariant = 'danger';
+            if (this.shellies[i]._rowVariant) {
+                delete this.shellies[i]._rowVariant;
+                this.delete--;
+            } else {
+                this.shellies[i]._rowVariant = 'danger';
+                this.delete++;
+            }
             this.$refs.table.refresh();
-            logger.log(this.shellies);
+        },
+        saveIP () {
+            logger.log('enter pressed ' + this.ip);
+            this.addToDB(this.ip);
+        },
+        removeIP () {
+            this.shellies.forEach(shelly => {
+                if (shelly._rowVariant) {
+                    logger.log('removing ' + shelly.ip + ' from db');
+                    this.removeFromDB(shelly.ip);
+                }
+            });
+            this.delete = 0;
         }
     },
     computed: {
