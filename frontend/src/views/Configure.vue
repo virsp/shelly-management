@@ -5,37 +5,42 @@
                 <h1>Configuration</h1>
             </div>
         </div>
-        <div class="row justify-content-center">
-            <b-form class="col-auto" @submit.stop.prevent="saveIP()">
-                <label for="add-ip">Add a IP to the database</label>
-                <b-input-group>
-                    <b-form-input v-model="ip" id="add-ip" placeholder="e.g. 192.192.192.192"></b-form-input>
-                    <b-button @click="saveIP()" variant="primary">Save</b-button>
-                </b-input-group>
-            </b-form>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-auto">
-                {{shellies.ips}}
-                <b-list-group>
-                    <b-list-group-item v-for="shelly in shellies.ips" v-bind:key="shelly">{{shelly}}</b-list-group-item>
-                </b-list-group>
-                <b-table ref="table" striped hover outlined :items="shellies" :fields="fields">
-                    <template #cell(IP)="data">
-                        {{ data.item.ip }}
-                    </template>
-
-                    <template #cell(del)="data">
-                        <b-icon id="clickable" icon="x-circle-fill" @click="removeTime(data.index)"></b-icon>
-                        {{data.index}}
-                    </template>
-
-                </b-table>
+        <b-overlay :show="this.loading">
+            <template #overlay>
+                <div class="text-center text-danger my-2">
+                    <b-spinner class="align-middle"></b-spinner>
+                    <strong>Loading...</strong>
+                </div>
+            </template>
+            <div class="row justify-content-center">
+                <b-form class="col-auto" @submit.stop.prevent="saveIP()">
+                    <label for="add-ip">Add a IP to the database</label>
+                    <b-input-group>
+                        <b-form-input v-model="ip" id="add-ip" placeholder="e.g. 192.192.192.192"></b-form-input>
+                        <b-button @click="saveIP()" variant="primary">Save</b-button>
+                    </b-input-group>
+                </b-form>
             </div>
-        </div>
-        <div v-if="this.delete > 0" class="row justify-content-center">
-            <b-button @click="removeIP()" variant=danger>Remove selected</b-button>
-        </div>
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <b-table ref="table" striped hover outlined :items="shellies" :fields="fields">
+                        <template #cell(IP)="data">
+                            {{ data.item.ip }}
+                        </template>
+
+                        <template #cell(del)="data">
+                            <b-icon id="clickable" icon="x-circle-fill" @click="removeTime(data.index)"></b-icon>
+                            {{data.index}}
+                        </template>
+
+                    </b-table>
+                </div>
+            </div>
+            <div v-if="this.delete > 0" class="row justify-content-center">
+                <b-button @click="removeIP()" variant=danger>Remove selected</b-button>
+            </div>
+
+        </b-overlay>
     </div>
 </template>
 <script>
@@ -48,6 +53,7 @@ export default {
             ip: null,
             ips: [],
             delete: 0,
+            loading: false,
             fields: [
                 'IP',
                 { key: 'del', label: 'Remove time' }
@@ -66,17 +72,26 @@ export default {
             }
             this.$refs.table.refresh();
         },
-        saveIP () {
+        async saveIP () {
             logger.log('enter pressed ' + this.ip);
-            this.addToDB(this.ip);
+            this.loading = true;
+            await this.addToDB(this.ip);
+            this.loading = false;
         },
-        removeIP () {
+        async removeIP () {
+            this.loading = true;
+            const ipToRemove = [];
+            // weird abstraction to enable small loading window rendering
             this.shellies.forEach(shelly => {
                 if (shelly._rowVariant) {
                     logger.log('removing ' + shelly.ip + ' from db');
-                    this.removeFromDB(shelly.ip);
+                    ipToRemove.push(shelly.ip);
                 }
             });
+            for (let i = 0; i < ipToRemove.length; i++) {
+                await this.removeFromDB(ipToRemove[i]);
+            }
+            this.loading = false;
             this.delete = 0;
         }
     },
