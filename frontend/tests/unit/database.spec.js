@@ -17,6 +17,6 @@ test('Add ip to database', async () => {
     const ipToBeAdded = '192.192.192.192';
     await db.addIP(ipToBeAdded);
     const data = await db.getIPS();
-    const ips = data.ips
+    const ips = data.ips;
     expect(ips[ips.length - 1]).toBe(ipToBeAdded);
 });
