@@ -36,6 +36,15 @@ export default new Vuex.Store({
         async addIP (state, ip) {
             await db.addIP(ip);
             await state.dispatch('getIPS');
+        },
+        /**
+         * Removes a IP from the database
+         * @param {*} state
+         * @param {String} ip to be removed
+         */
+        async removeIP (state, ip) {
+            await db.removeIP(ip);
+            await state.dispatch('getIPS');
         }
     },
     getters: {
