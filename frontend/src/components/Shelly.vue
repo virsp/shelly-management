@@ -2,10 +2,10 @@
     <div class="row">
         <div class="col-auto">
             <b-overlay :show="this.loading" rounded="sm">
-                <b-card v-if="true" border-variant="info" align="center" style="width: 25rem">
+                <b-card class="card" v-if="true" border-variant="info" align="center" style="width: 25rem">
                     <b-card-title class="mb-0">{{settings.name}}</b-card-title>
                     <div>
-                        {{settings.device.type}} - {{this.ip}}
+                        {{settings.device.type}} - <a v-bind:href="deviceLink">{{ip}}</a>
                     </div>
                     <div>
                         {{this.ota.old_version}}
@@ -137,8 +137,15 @@
 
                     </b-card-text>
                 </b-card>
+                <template #overlay>
+                    <div class="text-center">
+                    <b-icon icon="stopwatch" font-scale="3" animation="cylon"></b-icon>
+                    <p v-if="!errorText" id="cancel-label">Loading...</p>
+                    <p v-else id="cancel-label">Have you remembered to enable CORS?</p>
+                    <a v-bind:href="deviceLink">{{deviceLink}}</a>
+                    </div>
+                </template>
             </b-overlay>
-
         </div>
     </div>
 </template>
@@ -155,8 +162,10 @@ export default {
             toggle: [],
             ota: {},
             settings: dummyData,
-            loading: false,
-            updating: false
+            loading: true,
+            updating: false,
+            errorText: false,
+            deviceLink: 'http://' + this.ip
         };
     },
     methods: {
@@ -209,21 +218,25 @@ export default {
         },
         async fetchSettings () {
             this.loading = true;
+            // Cinematic loading pause
             await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // console.log('fetching settings for ' + this.ip);
-
-            this.settings = await shelly.getSettings(this.ip);
-            this.loading = false;
+            try {
+                this.settings = await shelly.getSettings(this.ip);
+                this.loading = false;
+            } catch (error) {
+                this.errorText = true;
+            }
         },
         async fetchOTA () {
             this.loading = true;
+            // Cinematic loading pause
             await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // console.log('fetching OTA for ' + this.ip);
-
-            this.ota = await shelly.getOTA(this.ip);
-            this.loading = false;
+            try {
+                this.ota = await shelly.getOTA(this.ip);
+                this.loading = false;
+            } catch (error) {
+                this.errorText = true;
+            }
         }
     },
     mounted () {
@@ -234,7 +247,9 @@ export default {
 };
 </script>
 <style>
-
+.card {
+    box-shadow: 10px 5px 5px rgb(241, 241, 241);
+}
 #clickable {
     cursor: pointer;
 }
