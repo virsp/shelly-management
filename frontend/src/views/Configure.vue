@@ -24,13 +24,19 @@
             <div class="row justify-content-center">
                 <div class="col-auto">
                     <b-table ref="table" striped hover outlined :items="shellies" :fields="fields">
+                        <!-- Indexing -->
+                        <template #cell(#)="data">
+                            {{ data.index + 1 }}
+                        </template>
+
+                        <!-- IP -->
                         <template #cell(IP)="data">
                             {{ data.item.ip }}
                         </template>
 
+                        <!-- Delete button -->
                         <template #cell(del)="data">
                             <b-icon id="clickable" icon="x-circle-fill" @click="removeTime(data.index)"></b-icon>
-                            {{data.index}}
                         </template>
 
                     </b-table>
@@ -55,6 +61,7 @@ export default {
             delete: 0,
             loading: false,
             fields: [
+                '#',
                 'IP',
                 { key: 'del', label: 'Remove time' }
             ]
