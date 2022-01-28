@@ -26,7 +26,10 @@ const shelly = {
             .then(json => {
                 data = json;
             })
-            .catch(err => logger.error('error:' + err));
+            .catch(err => {
+                logger.error('error:' + err);
+                throw new Error(err);
+            });
         return data;
     },
     getOTA: async (ip) => {
@@ -38,7 +41,10 @@ const shelly = {
             .then(json => {
                 data = json;
             })
-            .catch(err => logger.error('error:' + err));
+            .catch(err => {
+                logger.error('error:' + err);
+                throw new Error(err);
+            });
 
         return data;
     },
