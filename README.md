@@ -16,6 +16,7 @@ A shelly dashboard to monitor shelly devices
   - [x] Override DB API ip
 - [ ] Dashboard
   - [ ] Device reboot
+  - [ ] status if device is not responding
 - [ ] Per device support, as for now only common HTTP API will be focused on
 
 
