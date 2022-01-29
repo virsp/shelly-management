@@ -141,7 +141,10 @@
                     <div class="text-center">
                     <b-icon icon="stopwatch" font-scale="3" animation="cylon"></b-icon>
                     <p v-if="!errorText" id="cancel-label">Loading...</p>
-                    <p v-else id="cancel-label">Have you remembered to enable CORS?</p>
+                    <div v-else>
+                        <p id="cancel-label">Have you remembered to enable CORS?</p>
+                        <b-button @click="enableCors()" variant="outline-success">Enable cors</b-button>
+                    </div>
                     <a v-bind:href="deviceLink">{{deviceLink}}</a>
                     </div>
                 </template>
@@ -150,8 +153,8 @@
     </div>
 </template>
 <script>
-import { shelly } from '@/api/shelly';
 import dummyData from '@/assets/dummyData';
+import { mapActions } from 'vuex';
 export default {
     name: 'Shelly',
     props: ['ip'],
@@ -169,6 +172,7 @@ export default {
         };
     },
     methods: {
+        ...mapActions(['getOTA', 'getSettings', 'updateFirmware', 'enableCORS']),
         removeEnable (obj) {
             const asArray = Object.entries(obj);
             const filtered = asArray.filter(([key, value]) => {
@@ -181,18 +185,6 @@ export default {
             if (this.toggle[i]) this.$set(this.toggle, i, false);
             else this.$set(this.toggle, i, true);
         },
-        checkVerbose () {
-            if (this.$refs.click) {
-                console.log('check verbose');
-                const verboseNode = this.$refs.click.nextSibling.nodeValue;
-                console.log(verboseNode);
-                const exist = this.verbose.includes();
-                console.log('is clicked ' + exist);
-                return exist;
-            } else {
-                return false;
-            }
-        },
         async updateFirmware () {
             console.log('firmware update issued');
             this.updating = true;
@@ -200,14 +192,14 @@ export default {
             await new Promise(resolve => setTimeout(resolve, 2000));
             this.checkUpdatingStatus();
 
-            await shelly.updateFirmware(this.ip);
+            await this.updateFirmware(this.ip);
         },
         async checkUpdatingStatus () {
             let ota = {
                 status: 'updating'
             };
             while (ota.status === 'updating' || ota.status === 'unknown') {
-                ota = await shelly.getOTA(this.ip);
+                ota = await this.getOTA(this.ip);
                 if (ota.status === 'idle') {
                     this.updating = false;
                     this.loading = false;
@@ -219,9 +211,9 @@ export default {
         async fetchSettings () {
             this.loading = true;
             // Cinematic loading pause
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // await new Promise(resolve => setTimeout(resolve, 2000));
             try {
-                this.settings = await shelly.getSettings(this.ip);
+                this.settings = await this.getSettings(this.ip);
                 this.loading = false;
             } catch (error) {
                 this.errorText = true;
@@ -230,13 +222,18 @@ export default {
         async fetchOTA () {
             this.loading = true;
             // Cinematic loading pause
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // await new Promise(resolve => setTimeout(resolve, 2000));
             try {
-                this.ota = await shelly.getOTA(this.ip);
+                this.ota = await this.getOTA(this.ip);
                 this.loading = false;
             } catch (error) {
                 this.errorText = true;
             }
+        },
+        async enableCors () {
+            await this.enableCORS(this.ip);
+            await this.fetchSettings();
+            await this.fetchOTA();
         }
     },
     mounted () {
