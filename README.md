@@ -17,6 +17,7 @@ A shelly dashboard to monitor shelly devices
 - [ ] Dashboard
   - [ ] Device reboot
   - [ ] status if device is not responding
+  - [ ] New device without cors update
 - [ ] Per device support, as for now only common HTTP API will be focused on
 
 
