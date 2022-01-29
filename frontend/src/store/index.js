@@ -15,7 +15,7 @@ export default new Vuex.Store({
             state.ips = ips;
         },
         addShellySetting (state, ip, settings) {
-            state.shellySettings = { [ip]: settings };
+            state.shellySettings[ip] = { shelly: settings };
         }
     },
     actions: {
