@@ -1,16 +1,21 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { db } from '@/api/database';
+import { shelly } from '@/api/shelly';
 import logger from '@/plugins/logger';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        ips: []
+        ips: [],
+        shellySettings: {}
     },
     mutations: {
         saveIPS (state, ips) {
             state.ips = ips;
+        },
+        addShellySetting (state, ip, settings) {
+            state.shellySettings = { [ip]: settings };
         }
     },
     actions: {
@@ -45,6 +50,69 @@ export default new Vuex.Store({
         async removeIP (state, ip) {
             await db.removeIP(ip);
             await state.dispatch('getIPS');
+        },
+        /**
+         * Provides basic information about the device. It does not require HTTP authentication, even if authentication is enabled globally
+         * @param {*} state
+         * @param {String} ip shelly device ip
+         * @returns status in json
+         */
+        async getStatus (state, ip) {
+            try {
+                return await shelly.getStatus(ip);
+            } catch (error) {
+                throw new Error(error);
+            }
+        },
+        /**
+         * Gets settings for shelly device and saves it to the store
+         * @param {String} ip shelly device ip
+         * @returns shelly status in json format
+         */
+        async getSettings (state, ip) {
+            try {
+                const settings = await shelly.getSettings(ip);
+                state.commit('addShellySetting', ip, settings);
+                return settings;
+            } catch (error) {
+                throw new Error(error);
+            }
+        },
+        /**
+         * Provides information about the device firmware version
+         * @param {String} ip shelly device ip
+         * @returns shelly status in json format
+         */
+        async getOTA (state, ip) {
+            try {
+                return await shelly.getOTA(ip);
+            } catch (error) {
+                throw new Error(error);
+            }
+        },
+        /**
+         * Attempts a OTA update of the given device
+         * @param {String} ip shelly device ip
+         * @returns shelly status in json format
+         */
+        async updateFirmware (state, ip) {
+            try {
+                return await shelly.updateFirmware(ip);
+            } catch (error) {
+                throw new Error(error);
+            }
+        },
+        /**
+         * Attemps to enable cors on the device if it supports it
+         * @param {String} ip shelly device ip
+         * @returns shelly status in json format
+         */
+        async enableCORS (state, ip) {
+            try {
+                return await shelly.enableCORS(ip);
+            } catch (error) {
+                throw new Error(error);
+            }
         }
     },
     getters: {
