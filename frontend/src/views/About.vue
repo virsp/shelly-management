@@ -11,6 +11,9 @@
           and more configuration options.
         </p>
         <p>
+          Want to contribute? Get in touch on Github!
+        </p>
+        <p>
           For more information about shellies api visit
           <a href="https://shelly-api-docs.shelly.cloud/">Shelly API Documentation</a>.
         </p>
