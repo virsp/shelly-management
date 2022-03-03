@@ -77,7 +77,7 @@ const shelly = {
         try {
             return await sendRequest(url, options);
         } catch (error) {
-            logger.error('shelly getSetting failed: ' + error);
+            logger.error('shelly update failed: ' + error);
             throw new Error(error);
         }
     },
@@ -92,7 +92,7 @@ const shelly = {
         try {
             return await sendRequest(url, options);
         } catch (error) {
-            logger.error('shelly getSetting failed: ' + error);
+            logger.error('shelly enable CORS failed: ' + error);
             throw new Error(error);
         }
     }
