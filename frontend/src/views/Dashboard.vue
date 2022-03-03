@@ -7,6 +7,15 @@
                     <Shelly :ip="shelly"/>
                 </div>
             </div>
+            <div v-else>
+                <b-alert class="col" show dismissible variant="danger">
+                    <h4 class="alert-heading">Connection problems!</h4>
+                    There seems to be a connection error to the database.
+                    <p class="mb-0">
+                        Retry again!
+                    </p>
+                </b-alert>
+            </div>
         </div>
     </div>
 </template>
