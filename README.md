@@ -1,5 +1,5 @@
 # Shelly Management
-A shelly dashboard to monitor shelly devices. 
+A shelly dashboard to monitor shelly devices. So far it's very basic but there are plenty of suggested improvements to be made whenever time is there.
 
 ## Installation
 1. Pull the repo
