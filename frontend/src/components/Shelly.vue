@@ -140,7 +140,8 @@
                 <template #overlay>
                     <div class="text-center">
                     <b-icon icon="stopwatch" font-scale="3" animation="cylon"></b-icon>
-                    <p v-if="!errorText" id="cancel-label">Loading...</p>
+                    <p v-if="!errorText && !updating" id="cancel-label">Loading...</p>
+                    <p v-else-if="!errorText && updating" id="cancel-label">Update in progress...</p>
                     <div v-else>
                         <p id="cancel-label">Have you remembered to enable CORS?</p>
                         <b-button @click="enableCors()" variant="outline-success">Enable cors</b-button>
@@ -172,7 +173,8 @@ export default {
         };
     },
     methods: {
-        ...mapActions(['getOTA', 'getSettings', 'updateFirmware', 'enableCORS']),
+        ...mapActions(['getOTA', 'getSettings', 'enableCORS']),
+        ...mapActions({ shellyUpdate: 'updateFirmware' }),
         removeEnable (obj) {
             const asArray = Object.entries(obj);
             const filtered = asArray.filter(([key, value]) => {
@@ -186,25 +188,24 @@ export default {
             else this.$set(this.toggle, i, true);
         },
         async updateFirmware () {
-            console.log('firmware update issued');
             this.updating = true;
             this.loading = true;
             await new Promise(resolve => setTimeout(resolve, 2000));
             this.checkUpdatingStatus();
-
-            await this.updateFirmware(this.ip);
+            await this.shellyUpdate(this.ip);
         },
         async checkUpdatingStatus () {
             let ota = {
                 status: 'updating'
             };
-            while (ota.status === 'updating' || ota.status === 'unknown') {
+            while (ota.status === 'updating' || ota.status === 'unknown' || ota.status === 'pending') {
                 ota = await this.getOTA(this.ip);
                 if (ota.status === 'idle') {
                     this.updating = false;
                     this.loading = false;
                 }
-                await new Promise(resolve => setTimeout(resolve, 200));
+                // time before new poll
+                await new Promise(resolve => setTimeout(resolve, 5000));
             }
             this.ota = ota;
         },
