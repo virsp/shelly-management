@@ -1,7 +1,17 @@
-# shelly-management
-A shelly dashboard to monitor shelly devices
+# Shelly Management
+A shelly dashboard to monitor shelly devices. 
 
-## Some suggest improvements
+## Installation
+1. Pull the repo
+2. Navigate to root folder
+3. Configure the ports in ***docker-compose.yml*** to personal prefrence
+4. Configure the ***.env*** file in `frontend/.env` to point towards the backend server port (configured in docker-compose.yml), i.e http://some-ip:port 
+5. run `docker-compose up` and the project will build 
+
+## Contribution
+I have no idea on how to manage a public repository. 
+
+## Some suggested improvements
 ### Frontend
 
 - [x] Dialogue to enable CORS on device
@@ -30,3 +40,4 @@ A shelly dashboard to monitor shelly devices
 
 ### Docker
 - [ ] Pass env via docker-compose to frontend to allow for less configuration before build
+- [ ] Some updating mechanism for the whole project
